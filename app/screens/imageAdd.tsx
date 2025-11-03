@@ -9,20 +9,17 @@ export default function App() {
   const MAX_IMAGES = 3;
 
   const parametros = useLocalSearchParams();
-  console.log(parametros); 
 
   const handleSelectImage = async () => {
 
-    //ImagePicker alterado. Erro na inserção de mais de um elemento de imagem
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permissão necessária', 'Precisamos de permissão para acessar a galeria.');
       return;
     }
 
-    //Imagem convertidas como string para inserção em um array
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'], 
+      mediaTypes: ['images'],
       quality: 1,
       allowsMultipleSelection: false,
     });
@@ -41,11 +38,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-          <Button title="Retornar" color="#174791" onPress={() => router.push("/screens/publish")} />
-          <View style={{ flex: 1 }} />
-          <Button title="Publicar" color="#297E33" onPress={() => router.push("/(tabs)")} />
-        </View>
+      <View style={styles.header}>
+        <Button title="Retornar" color="#174791" onPress={() => router.push("/screens/publish")} />
+        <View style={{ flex: 1 }} />
+        <Button title="Publicar" color="#297E33" onPress={() => router.push("/menu")} />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.imageContainer}>
@@ -62,8 +59,6 @@ export default function App() {
         </View>
       </ScrollView>
 
-    {/*Botão alterado para ter style modificado */}
-    {/*Não é possível alterar padding, border e background de um button */}
       <TouchableOpacity
         style={styles.floatingButton}
         onPress={handleSelectImage}
@@ -121,6 +116,25 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   floatingButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  publishButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#297E33',
+    paddingVertical: 15,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  publishButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,

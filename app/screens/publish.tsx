@@ -13,28 +13,27 @@ export default function App() {
   const [address, setAddress] = useState("");
   const router = useRouter();
   const [showAddressModal, setShowAddressModal] = useState(false);
-  
+
 
   const handleNavigate = () => {
-  router.push({
-    pathname: '/screens/imageAdd',
-    params: {
-      title,
-      theme,
-      name,
-      anonymous: anonymous ? 'true' : 'false',
-      complaint,
-      address,
-    },
-  });
-};
+    router.push({
+      pathname: '/screens/imageAdd',
+      params: {
+        title,
+        theme,
+        name,
+        anonymous: anonymous ? 'true' : 'false',
+        complaint,
+        address,
+      },
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {/* Section 1 */}
       <View style={styles.header}>
         <View style={styles.headerButtons}>
-          <Button title="Cancelar" color='#297E33' onPress={() => {}} />
+          <Button title="Cancelar" color='#297E33' onPress={() => router.push("/menu")} />
           <View style={{ flex: 1 }} />
           <View style={styles.publishBtn}>
             <Button title="Adicionar Imagens" color='#297E33' onPress={handleNavigate} />
@@ -42,11 +41,9 @@ export default function App() {
         </View>
       </View>
 
-      {/* Section 2 */}
       <View style={styles.sectionContainer}>
         <Text style={styles.title}>Nova publicação</Text>
 
-        {/* Título */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Título</Text>
           <TextInput
@@ -58,7 +55,6 @@ export default function App() {
           />
         </View>
 
-        {/* Tema */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Tema</Text>
           <Picker
@@ -86,14 +82,13 @@ export default function App() {
           )}
         </View>
         <AddressModal
-        visible={showAddressModal}
-        onClose={() => setShowAddressModal(false)}
-        onConfirm={(fullAddress) => {
-          setAddress(fullAddress);
-          setShowAddressModal(false);
-        }}/>
+          visible={showAddressModal}
+          onClose={() => setShowAddressModal(false)}
+          onConfirm={(fullAddress) => {
+            setAddress(fullAddress);
+            setShowAddressModal(false);
+          }} />
 
-        {/* Nome + Switch */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nome</Text>
           <TextInput
@@ -110,7 +105,6 @@ export default function App() {
           </View>
         </View>
 
-        {/* Reclamação */}
         <View style={styles.textAreaGroup}>
           <Text style={styles.counter}>{complaint.length}/250</Text>
           <TextInput
@@ -191,9 +185,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   textAreaGroup: {
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: 'gray',
-    borderStyle: 'solid', 
+    borderStyle: 'solid',
     borderRadius: 15,
     marginVertical: 10,
     paddingHorizontal: 10,
@@ -213,32 +207,33 @@ const styles = StyleSheet.create({
     color: '#555555',
   },
   sectionContainer: {
-  backgroundColor: '#FFFFFF',
-  borderRadius: 20,
-  padding: 16,
-  marginTop: -15,
-},
-scrollContainer: {
-  flexGrow: 1,
-  backgroundColor: '#FFFFFF',
-  paddingBottom: 30,
-},
-addressText: { 
-  fontSize: 18, 
-  color: "#333", 
-  marginBottom: 30, 
-  textAlign: "center" 
-},
-address: { 
-  fontSize: 18, 
-  color: "#333" 
-},
-placeholder: { 
-  fontSize: 16, 
-  color: "gray" },
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    marginTop: -15,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: '#FFFFFF',
+    paddingBottom: 30,
+  },
+  addressText: {
+    fontSize: 18,
+    color: "#333",
+    marginBottom: 30,
+    textAlign: "center"
+  },
+  address: {
+    fontSize: 18,
+    color: "#333"
+  },
+  placeholder: {
+    fontSize: 16,
+    color: "gray"
+  },
   inputDisabled: {
-  backgroundColor: '#f0f0f0',
-  color: '#999',
-  opacity: 0.7,
-},
+    backgroundColor: '#f0f0f0',
+    color: '#999',
+    opacity: 0.7,
+  },
 });
