@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Voz do Povo</Text>
+      <Button title='Publicar' onPress={() => router.push("/screens/publish")}></Button>
     </View>
   );
 }
