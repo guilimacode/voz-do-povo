@@ -12,6 +12,7 @@ export default function RootLayout() {
         <Stack.Screen name="screens/publish" options={{ headerShown: false }} />
         <Stack.Screen name="screens/imageAdd" options={{ headerShown: false }} />
         <Stack.Screen name="screens/publicationDetail" options={{ headerShown: false }} />
+        <Stack.Screen name="screens/chatbot" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </>

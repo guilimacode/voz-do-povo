@@ -39,7 +39,7 @@ export default function MenuScreen() {
                                 style={styles.cardImage}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.card, { marginLeft: 8 }]}>
+                        <TouchableOpacity style={[styles.card, { marginLeft: 8 }]} onPress={() => router.push('/screens/chatbot')}>
                             <Image
                                 source={require('../assets/images/assistente.png')}
                                 style={styles.cardImage}
