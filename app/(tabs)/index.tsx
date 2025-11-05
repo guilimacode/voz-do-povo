@@ -8,6 +8,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Voz do Povo</Text>
       <Button title='Publicar' onPress={() => router.push("/screens/publish")}></Button>
+      <Button title='Chatbot' onPress={() => router.push("/screens/chatbot")}></Button>
     </View>
   );
 }
