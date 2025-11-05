@@ -1,9 +1,17 @@
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function MenuScreen() {
     const router = useRouter();
+    const { message, status } = useLocalSearchParams();
+
+    useEffect(() => {
+        if (message && typeof message === 'string') {
+            const alertTitle = status === 'success' ? "Publicação Enviada" : "Erro na Publicação";
+            Alert.alert(alertTitle, message);
+        }
+    }, [message, status]);
 
     return (
         <ScrollView style={styles.mainContainer} contentContainerStyle={{ flexGrow: 1 }}>

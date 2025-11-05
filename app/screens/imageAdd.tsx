@@ -1,14 +1,38 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { uploadReportImage } from '../../src/services/reportImageService';
 
 export default function App() {
   const router = useRouter();
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const MAX_IMAGES = 3;
 
-  const parametros = useLocalSearchParams();
+  const { reportId } = useLocalSearchParams();
+
+  const handlePublish = async () => {
+    if (!reportId || typeof reportId !== 'string') {
+      Alert.alert("Erro", "ID da publicação não encontrado. Tente novamente.");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      if (selectedImages.length > 0) {
+        for (const imageUri of selectedImages) {
+          await uploadReportImage(reportId, imageUri);
+        }
+      }
+      router.replace({ pathname: "/screens/publicationDetail", params: { reportId } });
+    } catch (error) {
+      Alert.alert("Erro no Upload", "Ocorreu um erro ao enviar as imagens. Por favor, tente novamente.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleSelectImage = async () => {
 
@@ -39,9 +63,13 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Button title="Retornar" color="#174791" onPress={() => router.push("/screens/publish")} />
+        <Button title="Retornar" color="#174791" onPress={() => router.back()} />
         <View style={{ flex: 1 }} />
-        <Button title="Publicar" color="#297E33" onPress={() => router.push("/menu")} />
+        {isUploading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Button title="Publicar" color="#297E33" onPress={handlePublish} />
+        )}
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
@@ -60,9 +88,9 @@ export default function App() {
       </ScrollView>
 
       <TouchableOpacity
-        style={styles.floatingButton}
+        style={[styles.floatingButton, (selectedImages.length >= MAX_IMAGES || isUploading) && styles.hidden]}
         onPress={handleSelectImage}
-        disabled={selectedImages.length >= 3}
+        disabled={selectedImages.length >= MAX_IMAGES || isUploading}
       >
         <Text style={styles.floatingButtonText}>
           Adicionar imagem ({remaining})
@@ -120,23 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  publishButton: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: '#297E33',
-    paddingVertical: 15,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  publishButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+  hidden: {
+    display: 'none',
   },
 });

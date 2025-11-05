@@ -1,34 +1,76 @@
 import { Picker } from "@react-native-picker/picker";
-import React, { useState } from "react";
-import { Alert, Button, Modal, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Button, Modal, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { getAddressByCep } from "../../src/services/viaCepService";
 
 export default function AddressModal({ visible, onClose, onConfirm }) {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
-  const [reference, setReference] = useState("");
+  const [complement, setComplement] = useState("");
   const [number, setNumber] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
+
+  const handleNumberChange = (text: string) => {
+    const cleaned = text.replace(/\D/g, '');
+    setNumber(cleaned);
+  };
+
+  const handleZipCodeChange = (text: string) => {
+    const cleaned = text.replace(/\D/g, '');
+    const limited = cleaned.slice(0, 8);
+    const masked = limited.replace(/^(\d{5})(\d)/, '$1-$2');
+
+    setZipCode(masked);
+  };
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (zipCode.length === 9) {
+        setIsLoadingCep(true);
+        const addressData = await getAddressByCep(zipCode);
+        setIsLoadingCep(false);
+        if (addressData) {
+          setStreet(addressData.logradouro);
+          setNeighborhood(addressData.bairro);
+          setCity(addressData.localidade);
+          setState(addressData.uf.toLowerCase());
+        }
+      }
+    };
+    fetchAddress();
+  }, [zipCode]);
 
   const handleConfirm = () => {
 
-    //A ordem do código afeta na ordem da inserção
+    if (!zipCode || !state || !city || !neighborhood || !street || !number) {
+      Alert.alert("Campos obrigatórios", "Preencha todos os campos obrigatórios (*).");
+      return;
+    }
+
     const parts = [];
     if (street) parts.push(street);
     if (number) parts.push(number);
     if (neighborhood) parts.push(neighborhood);
     if (city) parts.push(city);
     if (state) parts.push(state.toUpperCase());
-    if (reference) parts.push(` - Ref: ${reference}`);
+    if (complement) parts.push(complement);
 
     const fullAddress = parts.join(", ");
 
-    if (!fullAddress) {
-      Alert.alert("Atenção", "Por favor, preencha o endereço.");
-      return;
-    }
+    const addressDetails = {
+      street,
+      number,
+      neighborhood,
+      city,
+      state,
+      complement,
+      zipCode,
+    };
 
-    onConfirm(fullAddress);
+    onConfirm(fullAddress, addressDetails);
   };
 
   return (
@@ -39,12 +81,29 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
             <Text style={styles.title}>Endereço</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Estado</Text>
+              <Text style={styles.label}>
+                CEP<Text style={styles.asterisk}> *</Text>
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Digite o CEP"
+                value={zipCode}
+                onChangeText={handleZipCodeChange}
+                keyboardType="numeric"
+                maxLength={9}
+              />
+              {isLoadingCep && <ActivityIndicator size="small" color="#297E33" style={styles.loadingIndicator} />}
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>
+                Estado<Text style={styles.asterisk}> *</Text>
+              </Text>
               <Picker
                 selectedValue={state}
                 onValueChange={(itemValue) => setState(itemValue)}
                 style={styles.picker}>
-                
+
                 <Picker.Item label="Selecione o estado" value="" />
                 <Picker.Item label="Acre" value="ac" />
                 <Picker.Item label="Alagoas" value="al" />
@@ -70,12 +129,14 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
                 <Picker.Item label="Roraima" value="rr" />
                 <Picker.Item label="Santa Catarina" value="sc" />
                 <Picker.Item label="Sergipe" value="se" />
-                <Picker.Item label="Tocantins" value="to" /> 
+                <Picker.Item label="Tocantins" value="to" />
               </Picker>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Cidade</Text>
+              <Text style={styles.label}>
+                Cidade<Text style={styles.asterisk}> *</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Digite a cidade"
@@ -85,7 +146,9 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Bairro</Text>
+              <Text style={styles.label}>
+                Bairro<Text style={styles.asterisk}> *</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Digite o bairro"
@@ -95,7 +158,9 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Rua</Text>
+              <Text style={styles.label}>
+                Rua<Text style={styles.asterisk}> *</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Digite a rua"
@@ -105,22 +170,25 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Número</Text>
+              <Text style={styles.label}>
+                Número<Text style={styles.asterisk}> *</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Digite o número"
                 value={number}
-                onChangeText={setNumber}
+                onChangeText={handleNumberChange}
+                keyboardType="numeric"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Referência</Text>
+              <Text style={styles.label}>Complemento</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Ponto de referência"
-                value={reference}
-                onChangeText={setReference}
+                placeholder="Apto, bloco, etc."
+                value={complement}
+                onChangeText={setComplement}
               />
             </View>
 
@@ -168,6 +236,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
+  asterisk: {
+    color: 'red',
+    fontSize: 16,
+  },
   input: {
     backgroundColor: "#FFF",
     padding: 8,
@@ -179,5 +251,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 20,
+  },
+  loadingIndicator: {
+    position: 'absolute',
+    right: 15,
+    top: '50%',
   },
 });
