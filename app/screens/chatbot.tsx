@@ -10,9 +10,9 @@ interface Message {
 }
 
 export default function App() {
-    const router = useRouter();
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [input, setInput] = useState("");
+  const router = useRouter();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
 
   const respostas: Record<string, string> = {
     "1": "Opção 1 selecionada: Enel",
@@ -71,19 +71,19 @@ export default function App() {
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"} // aparentemente funciona no android tbm
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 30} // não entendi so aceitei
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 30}
       >
         <View style={styles.header}>
-    <TouchableOpacity onPress={() => router.push("/(tabs)")} style={{ paddingRight: 3, backgroundColor: "#FFFFFF", borderRadius: 50, marginRight: 60}}
-    >
-      <Image
-        source={require("../../assets/images/icone_voltar.png")}
-        style={{ width: 30, height: 30}}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-            <Text style={styles.title}>Assistente Virtual</Text>
+          <TouchableOpacity onPress={() => router.push("/menu")} style={{ paddingRight: 3, backgroundColor: "#FFFFFF", borderRadius: 50, marginRight: 60 }}
+          >
+            <Image
+              source={require("../../assets/images/icone_voltar.png")}
+              style={{ width: 30, height: 30 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <Text style={styles.title}>Assistente Virtual</Text>
         </View>
         <FlatList
           data={messages}

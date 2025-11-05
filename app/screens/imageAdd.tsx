@@ -1,28 +1,49 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { uploadReportImage } from '../../src/services/reportImageService';
 
 export default function App() {
   const router = useRouter();
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const MAX_IMAGES = 3;
 
-  const parametros = useLocalSearchParams();
-  console.log(parametros); 
+  const { reportId } = useLocalSearchParams();
+
+  const handlePublish = async () => {
+    if (!reportId || typeof reportId !== 'string') {
+      Alert.alert("Erro", "ID da publicação não encontrado. Tente novamente.");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      if (selectedImages.length > 0) {
+        for (const imageUri of selectedImages) {
+          await uploadReportImage(reportId, imageUri);
+        }
+      }
+      router.replace({ pathname: "/screens/publicationDetail", params: { reportId } });
+    } catch (error) {
+      Alert.alert("Erro no Upload", "Ocorreu um erro ao enviar as imagens. Por favor, tente novamente.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleSelectImage = async () => {
 
-    //ImagePicker alterado. Erro na inserção de mais de um elemento de imagem
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permissão necessária', 'Precisamos de permissão para acessar a galeria.');
       return;
     }
 
-    //Imagem convertidas como string para inserção em um array
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'], 
+      mediaTypes: ['images'],
       quality: 1,
       allowsMultipleSelection: false,
     });
@@ -41,11 +62,15 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-          <Button title="Retornar" color="#174791" onPress={() => router.push("/screens/publish")} />
-          <View style={{ flex: 1 }} />
-          <Button title="Publicar" color="#297E33" onPress={() => router.push("/(tabs)")} />
-        </View>
+      <View style={styles.header}>
+        <Button title="Retornar" color="#174791" onPress={() => router.back()} />
+        <View style={{ flex: 1 }} />
+        {isUploading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Button title="Publicar" color="#297E33" onPress={handlePublish} />
+        )}
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.imageContainer}>
@@ -62,12 +87,10 @@ export default function App() {
         </View>
       </ScrollView>
 
-    {/*Botão alterado para ter style modificado */}
-    {/*Não é possível alterar padding, border e background de um button */}
       <TouchableOpacity
-        style={styles.floatingButton}
+        style={[styles.floatingButton, (selectedImages.length >= MAX_IMAGES || isUploading) && styles.hidden]}
         onPress={handleSelectImage}
-        disabled={selectedImages.length >= 3}
+        disabled={selectedImages.length >= MAX_IMAGES || isUploading}
       >
         <Text style={styles.floatingButtonText}>
           Adicionar imagem ({remaining})
@@ -124,5 +147,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  hidden: {
+    display: 'none',
   },
 });
