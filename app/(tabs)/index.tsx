@@ -9,6 +9,7 @@ export default function HomeScreen() {
       <Text style={styles.title}>Voz do Povo</Text>
       <Button title='Publicar' onPress={() => router.push("/screens/publish")}></Button>
       <Button title='Chatbot' onPress={() => router.push("/screens/chatbot")}></Button>
+      <Button title='Manual' onPress={() => router.push("/screens/manual")}></Button>
     </View>
   );
 }
