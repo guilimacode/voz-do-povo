@@ -33,7 +33,7 @@ export default function MenuScreen() {
 
                 <View style={styles.gridContainer}>
                     <View style={styles.gridRow}>
-                        <TouchableOpacity style={[styles.card, { marginRight: 8 }]}>
+                        <TouchableOpacity style={[styles.card, { marginRight: 8 }]} onPress={() => router.push('/screens/services')}>
                             <Image
                                 source={require('../assets/images/infraestrutura.png')}
                                 style={styles.cardImage}
@@ -54,7 +54,7 @@ export default function MenuScreen() {
                                 style={styles.cardImage}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.card, { marginLeft: 8 }]}>
+                        <TouchableOpacity style={[styles.card, { marginLeft: 8 }]} onPress={() => router.push('/screens/manual')}>
                             <Image
                                 source={require('../assets/images/manual.jpg')}
                                 style={styles.cardImage}
