@@ -128,12 +128,13 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    marginRight: 10,
+    marginLeft: 10,
+    marginTop: 8,
   },
 
   backText: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "bold",
   },
 

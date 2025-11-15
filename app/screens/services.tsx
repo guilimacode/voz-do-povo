@@ -86,26 +86,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: 12,
-    paddingTop: 50,
+    paddingTop: 40,
     paddingBottom: 12,
     zIndex: 10,
     elevation: 4,
   },
 
   backButton: {
-    marginRight: 10,
+    marginLeft: 10,
+    marginTop: 8,
   },
 
   backText: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "bold",
   },
 
   logoContainer: {
     alignItems: "center",
     marginBottom: 10,
-    marginHorizontal: -20,
+    marginHorizontal: -10,
     paddingBottom: 10,
     borderBottomWidth: 1, 
     borderBottomColor: 'gray',
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
 
   scrollArea: {
-    marginTop: 155,
+    marginTop: 142,
     paddingTop: 10,
     borderRadius: 20,
     backgroundColor: "#fff",
