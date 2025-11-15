@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 
   backText: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "bold",
   },
 

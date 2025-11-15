@@ -16,10 +16,10 @@
         "backgroundColor": "#174791",
         "foregroundImage": "./assets/images/splash.png"
       },
-      "softwareKeyboardLayoutMode": "resize",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.vozdopovo"
+      "package": "com.anonymous.vozdopovo",
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "output": "static",

@@ -88,6 +88,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
                 style={styles.input}
                 placeholder="Digite o CEP"
                 value={zipCode}
+                placeholderTextColor="#AAAAAA"
                 onChangeText={handleZipCodeChange}
                 keyboardType="numeric"
                 maxLength={9}
@@ -140,6 +141,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
               <TextInput
                 style={styles.input}
                 placeholder="Digite a cidade"
+                placeholderTextColor="#AAAAAA"
                 value={city}
                 onChangeText={setCity}
               />
@@ -152,6 +154,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
               <TextInput
                 style={styles.input}
                 placeholder="Digite o bairro"
+                placeholderTextColor="#AAAAAA"
                 value={neighborhood}
                 onChangeText={setNeighborhood}
               />
@@ -164,6 +167,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
               <TextInput
                 style={styles.input}
                 placeholder="Digite a rua"
+                placeholderTextColor="#AAAAAA"
                 value={street}
                 onChangeText={setStreet}
               />
@@ -177,6 +181,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
                 style={styles.input}
                 placeholder="Digite o número"
                 value={number}
+                placeholderTextColor="#AAAAAA"
                 onChangeText={handleNumberChange}
                 keyboardType="numeric"
               />
@@ -186,6 +191,7 @@ export default function AddressModal({ visible, onClose, onConfirm }) {
               <Text style={styles.label}>Complemento</Text>
               <TextInput
                 style={styles.input}
+                placeholderTextColor="#AAAAAA"
                 placeholder="Apto, bloco, etc."
                 value={complement}
                 onChangeText={setComplement}
@@ -246,6 +252,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
+    color: '#AAAAAA',
   },
   buttonRow: {
     flexDirection: "row",

@@ -35,7 +35,8 @@ export default function RegisterScreen() {
             style={styles.container}
             contentContainerStyle={styles.scrollContentContainer}
             keyboardShouldPersistTaps="handled"
-        >            <Image
+        >
+            <Image
                 source={require('../../assets/images/logo_b.png')}
                 style={styles.logo}
                 resizeMode="contain"

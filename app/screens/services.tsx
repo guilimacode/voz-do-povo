@@ -7,7 +7,7 @@ export default function ManualDeUso() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.replace("/menu")} style={styles.backButton}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
         <Image source={require('assets/images/logo_b.png')} style={styles.logo} />
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 12,
     paddingTop: 40,
-    paddingBottom: 10,
+    paddingBottom: 12,
     zIndex: 10,
     elevation: 0,
   },
@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
 
   backText: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "bold",
   },
 
   logoContainer: {
     alignItems: "center",
     marginBottom: 10,
-    marginHorizontal: -20,
+    marginHorizontal: -10,
     paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
