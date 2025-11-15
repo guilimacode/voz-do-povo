@@ -1,9 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import AddressModal from 'app/screens/address';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Keyboard, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { publishReport, PublishReportData } from '../../src/services/reportService';
+import { EMAIL_USER_KEY } from '../../src/services/storage';
 
 export default function App() {
   const [title, setTitle] = useState('');
@@ -18,15 +20,24 @@ export default function App() {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showCancelMessage, setShowCancelMessage] = useState(false);
 
-  const handlePublishAndNavigate = async () => {
-    if (!title || !theme || !email || !addressDetails || (!anonymous && !name)) {
-      Alert.alert("Campos obrigatórios", "Preencha todos os campos obrigatórios (*).");
-      return;
-    }
+  useEffect(() => {
+    const loadEmail = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem(EMAIL_USER_KEY);
+        if (savedEmail !== null) {
+          setEmail(savedEmail);
+        }
+      } catch (e) {
+        console.error("Falha ao recuperar email do storage", e);
+      }
+    };
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert("Email Inválido", "Por favor, insira um endereço de email válido.");
+    loadEmail();
+  }, []);
+
+  const handlePublishAndNavigate = async () => {
+    if (!title || !theme || !email || !complaint || !addressDetails || (!anonymous && !name)) {
+      Alert.alert("Campos obrigatórios", "Preencha todos os campos obrigatórios (*).");
       return;
     }
 
@@ -46,7 +57,7 @@ export default function App() {
       },
       report: {
         report: title,
-        description: complaint,
+        reportDescription: complaint,
         reportCategory: theme.toUpperCase(),
       }
     };
@@ -71,138 +82,135 @@ export default function App() {
 
   return (
     <>
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.header}>
-        <View style={styles.headerButtons}>
-          <Button title="Cancelar" color='#297E33' onPress={onCancelPress} />
-          <View style={{ flex: 1 }} />
-          
-        </View>
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <View style={styles.headerButtons}>
+            <Button title="Cancelar" color='#297E33' onPress={onCancelPress} />
+            <View style={{ flex: 1 }} />
 
-      <View style={styles.sectionContainer}>
-        <Text style={styles.title}>Nova publicação</Text>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>
-            Título
-            <Text style={styles.asterisk}> *</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite o título aqui..."
-            maxLength={30}
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>
-            Tema
-            <Text style={styles.asterisk}> *</Text>
-          </Text>
-          <Picker
-            selectedValue={theme}
-            style={styles.picker}
-            onValueChange={(itemValue) => setTheme(itemValue)}
-          >
-            <Picker.Item label="Selecione um tema" value="" />
-            <Picker.Item label="Limpeza" value="LIMPEZA" />
-            <Picker.Item label="Meio Ambiente" value="MEIO AMBIENTE" />
-            <Picker.Item label="Infraestrutura" value="INFRAESTRUTURA" />
-            <Picker.Item label="Transporte" value="TRANSPORTE" />
-            <Picker.Item label="Mobilidade" value="MOBILIDADE" />
-            <Picker.Item label="Serviços" value="SERVIÇOS" />
-            <Picker.Item label="Água" value="ÁGUA" />
-            <Picker.Item label="Energia Elétrica" value="ENERGIA ELÉTRICA" />
-            <Picker.Item label="Saneamento Básico" value="SANEAMENTO BÁSICO" />
-            <Picker.Item label="Pertubação do Sossego" value="PERTUBAÇÃO DO SOSSEGO" />
-            <Picker.Item label="Segurança" value="SEGURANÇA" />
-            <Picker.Item label="Animais e Zoonoses" value="ANIMAIS E ZOONOSES" />
-          </Picker>
-        </View>
-
-        <View style={styles.inputGroup} >
-          <Text style={styles.label}>Endereço<Text style={styles.asterisk}> *</Text></Text>
-          {address ? (
-            <Text style={styles.address} onPress={() => setShowAddressModal(true)}>{address}</Text>
-          ) : (
-            <Text style={styles.placeholder} onPress={() => setShowAddressModal(true)}>Nenhum endereço cadastrado. Clique aqui para adicionar</Text>
-          )}
-        </View>
-        <AddressModal
-          visible={showAddressModal}
-          onClose={() => setShowAddressModal(false)}
-          onConfirm={(fullAddress, details) => {
-            setAddress(fullAddress);
-            setAddressDetails(details);
-            setShowAddressModal(false);
-          }} />
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email<Text style={styles.asterisk}> *</Text></Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite seu email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>
-            Nome
-            {!anonymous && <Text style={styles.asterisk}> *</Text>}
-          </Text>
-          <View style={styles.rowView}>
-          <TextInput
-            style={[styles.input, anonymous && styles.inputDisabled]}
-            placeholder={anonymous ? "" : "Digite seu nome"}
-            maxLength={30}
-            value={name}
-            onChangeText={setName}
-            editable={!anonymous}
-          />
-          <View style={styles.switchContainer}>
-            <Switch value={anonymous} onValueChange={(value) => setAnonymous(value)} />
-            <Text style={styles.switchLabel}>Permanecer anônimo</Text>
-          </View>
           </View>
         </View>
 
-        <View style={styles.textAreaGroup}>
-          <Text style={styles.counter}>{complaint.length}/250</Text>
-          <TextInput
-            style={styles.textArea}
-            placeholder="Descreva sua reclamação aqui..."
-            multiline
-            maxLength={250}
-            value={complaint}
-            onChangeText={setComplaint}
-          />
-        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.title}>Nova publicação</Text>
 
-            <TouchableOpacity style={{backgroundColor: '#297E33', borderRadius: 10, padding: 10, justifyContent: "center", alignItems: "center"}} onPress={handlePublishAndNavigate} >
-              <Text style={{fontSize: 15, color: "#FFFFFF"}}>Próxima etapa</Text>
-            </TouchableOpacity>
-      </View>
-    </ScrollView>
-    {showCancelMessage && (
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>
+              Título
+              <Text style={styles.asterisk}> *</Text>
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o título aqui..."
+              placeholderTextColor="#AAAAAA"
+              maxLength={60}
+              value={title}
+              onChangeText={setTitle}
+              returnKeyType="done"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>
+              Tema
+              <Text style={styles.asterisk}> *</Text>
+            </Text>
+            <Picker
+              selectedValue={theme}
+              style={styles.picker}
+              onValueChange={(itemValue) => setTheme(itemValue)}
+            >
+              <Picker.Item label="Selecione um tema" value="" />
+              <Picker.Item label="Limpeza" value="LIMPEZA" />
+              <Picker.Item label="Meio Ambiente" value="MEIO AMBIENTE" />
+              <Picker.Item label="Infraestrutura" value="INFRAESTRUTURA" />
+              <Picker.Item label="Transporte" value="TRANSPORTE" />
+              <Picker.Item label="Mobilidade" value="MOBILIDADE" />
+              <Picker.Item label="Serviços" value="SERVIÇOS" />
+              <Picker.Item label="Água" value="ÁGUA" />
+              <Picker.Item label="Energia Elétrica" value="ENERGIA ELÉTRICA" />
+              <Picker.Item label="Saneamento Básico" value="SANEAMENTO BÁSICO" />
+              <Picker.Item label="Pertubação do Sossego" value="PERTUBAÇÃO DO SOSSEGO" />
+              <Picker.Item label="Segurança" value="SEGURANÇA" />
+              <Picker.Item label="Animais e Zoonoses" value="ANIMAIS E ZOONOSES" />
+            </Picker>
+          </View>
+
+          <View style={styles.inputGroup} >
+            <Text style={styles.label}>Endereço<Text style={styles.asterisk}> *</Text></Text>
+            {address ? (
+              <Text style={styles.address} onPress={() => setShowAddressModal(true)}>{address}</Text>
+            ) : (
+              <Text style={styles.placeholder} onPress={() => setShowAddressModal(true)}>Nenhum endereço cadastrado. Clique aqui para adicionar</Text>
+            )}
+          </View>
+          <AddressModal
+            visible={showAddressModal}
+            onClose={() => setShowAddressModal(false)}
+            onConfirm={(fullAddress, details) => {
+              setAddress(fullAddress);
+              setAddressDetails(details);
+              setShowAddressModal(false);
+            }} />
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>
+              Nome
+              {!anonymous && <Text style={styles.asterisk}> *</Text>}
+            </Text>
+            <View style={styles.rowView}>
+              <TextInput
+                style={[styles.input, anonymous && styles.inputDisabled]}
+                placeholder={anonymous ? "" : "Digite seu nome"}
+                placeholderTextColor="#AAAAAA"
+                maxLength={30}
+                value={name}
+                onChangeText={setName}
+                editable={!anonymous}
+                returnKeyType="done"
+                onSubmitEditing={() => Keyboard.dismiss()}
+              />
+              <View style={styles.switchContainer}>
+                <Switch value={anonymous} onValueChange={(value) => setAnonymous(value)} />
+                <Text style={styles.switchLabel}>Permanecer anônimo</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.textAreaGroup}>
+            <Text style={styles.counter}>{complaint.length}/500</Text>
+            <TextInput
+              style={styles.textArea}
+              placeholder="Descreva sua reclamação aqui..."
+              placeholderTextColor="#AAAAAA"
+              multiline
+              maxLength={500}
+              value={complaint}
+              onChangeText={setComplaint}
+              returnKeyType="done"
+              onSubmitEditing={() => Keyboard.dismiss()}
+            />
+          </View>
+
+          <TouchableOpacity style={{ backgroundColor: '#297E33', borderRadius: 10, padding: 10, justifyContent: "center", alignItems: "center" }} onPress={handlePublishAndNavigate} >
+            <Text style={{ fontSize: 15, color: "#FFFFFF" }}>Próxima etapa</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      {showCancelMessage && (
         <View style={styles.cancelMessageContainer}>
           <Text style={styles.cancelMessageText}>Ao cancelar você irá excluir o conteúdo da publicação. Deseja continuar?</Text>
           <View style={{ flex: 1 }} />
-          <View style={{alignItems: "center"}}>
-          <TouchableOpacity onPress={() => {router.push("/menu")}} style={styles.cancelButton}>
-            <Text style={styles.cancelButtonText}>Excluir</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={closeCancelMessage} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Voltar</Text>
-          </TouchableOpacity>
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity onPress={() => { router.replace("/menu") }} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Excluir</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={closeCancelMessage} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Voltar</Text>
+            </TouchableOpacity>
           </View>
-          </View>
+        </View>
       )}
     </>
   );
@@ -322,9 +330,11 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     fontSize: 16,
-    color: "gray"
+    color: "#AAAAAA"
   },
   inputDisabled: {
+    height: 30,
+    alignSelf: 'center',
     backgroundColor: '#f0f0f0',
     color: '#999',
     opacity: 0.7,
@@ -358,8 +368,8 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 7,
     paddingVertical: 15,
-    marginHorizontal:10,
-    marginVertical:15,
+    marginHorizontal: 10,
+    marginVertical: 15,
     width: "100%",
     alignItems: "center"
   },

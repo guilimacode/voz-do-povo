@@ -3,84 +3,79 @@ import React from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ManualDeUso() {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push("/menu")} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
-        <Image source={require('assets/images/logo.png')} style={styles.logo}/>
+        <Image source={require('assets/images/logo_b.png')} style={styles.logo} />
       </View>
 
       <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent}>
-        {/*Seção 1 */}
         <View style={styles.sections}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.headerTitle}>Manual de Uso</Text>
-        </View>
-        </View>
-        <View style={styles.sections}>
-        <Text style={styles.paragraph}>
-          <Text style={styles.bold}>Bem-vindo(a)</Text> ao Voz do Cidadão! Este aplicativo foi criado para facilitar a
-          comunicação entre você e os serviços públicos da sua cidade. Aqui está um passo a passo de como usar cada
-          parte do app:
-        </Text>
-        </View>
-
-        {/*Seção 2 */}
-        <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Página Inicial</Text>
-        <Text style={styles.paragraph}>Na tela principal, você encontra:</Text>
-        <View style={styles.list}>
-          <Text style={styles.item}>• <Text style={styles.bold}>Busca por bairro:</Text> pesquise ocorrências ou sugestões feitas na sua região.</Text>
-          <Text style={styles.item}>• <Text style={styles.bold}>Nova sugestão/reclamação:</Text> envie sua própria solicitação à prefeitura.</Text>
-          <Text style={styles.item}>• <Text style={styles.bold}>Minhas Publicações:</Text> acompanhe tudo que você já enviou.</Text>
-          <Text style={styles.item}>• <Text style={styles.bold}>Dúvidas Frequentes:</Text> acesse este manual quando quiser.</Text>
-          <Text style={styles.item}>• <Text style={styles.bold}>Assistente Virtual:</Text> fale com o suporte ou peça ajuda diretamente pelo chat.</Text>
-        </View>
-        </View>
-
-        {/*Seção 3 */}
-        <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Fazer uma nova sugestão ou reclamação</Text>
-        <View style={styles.orderedList}>
-          <Text style={styles.item}>1. Toque em “Fazer uma nova sugestão/reclamação”.</Text>
-          <Text style={styles.item}>2. Preencha os campos:</Text>
-          <View style={styles.subList}>
-            <Text style={styles.subItem}>• <Text style={styles.bold}>Título:</Text> um resumo curto do problema.</Text>
-            <Text style={styles.subItem}>• <Text style={styles.bold}>Tema:</Text> escolha a categoria (ex.: iluminação, segurança, saneamento).</Text>
-            <Text style={styles.subItem}>• <Text style={styles.bold}>Nível:</Text> indique a gravidade (pouco urgente, urgente, emergência).</Text>
-            <Text style={styles.subItem}>• <Text style={styles.bold}>Endereço:</Text> onde está acontecendo a situação.</Text>
-            <Text style={styles.subItem}>• <Text style={styles.bold}>Nome:</Text> seu nome ou apelido.</Text>
+          <View style={styles.logoContainer}>
+            <Text style={styles.headerTitle}>Manual de Uso</Text>
           </View>
-          <Text style={styles.item}>3. Escreva a descrição com o máximo de detalhes possível.</Text>
-          <Text style={styles.item}>4. (Opcional) Adicione fotos ou vídeos.</Text>
-          <Text style={styles.item}>5. Toque em “Publicar” para enviar.</Text>
-          <Text style={styles.item}>💡 <Text style={styles.italic}>Dica:</Text> quanto mais detalhes você der, mais fácil será resolver o problema.</Text>
         </View>
-        </View>
-        
-        {/*Seção 4 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Acompanhar suas publicações</Text>
-        <Text style={styles.paragraph}>
-          Na aba “Minhas Publicações”, você pode:
-        </Text>
-        <View style={styles.subList}>
+          <Text style={styles.paragraph}>
+            <Text style={styles.bold}>Bem-vindo(a)</Text> ao Voz do Cidadão! Este aplicativo foi criado para facilitar a
+            comunicação entre você e os serviços públicos da sua cidade. Aqui está um passo a passo de como usar cada
+            parte do app:
+          </Text>
+        </View>
+
+        <View style={styles.sections}>
+          <Text style={styles.sectionTitle}>Página Inicial</Text>
+          <Text style={styles.paragraph}>Na tela principal, você encontra:</Text>
+          <View style={styles.list}>
+            <Text style={styles.item}>• <Text style={styles.bold}>Busca por bairro:</Text> pesquise ocorrências ou sugestões feitas na sua região.</Text>
+            <Text style={styles.item}>• <Text style={styles.bold}>Nova sugestão/reclamação:</Text> envie sua própria solicitação à prefeitura.</Text>
+            <Text style={styles.item}>• <Text style={styles.bold}>Minhas Publicações:</Text> acompanhe tudo que você já enviou.</Text>
+            <Text style={styles.item}>• <Text style={styles.bold}>Dúvidas Frequentes:</Text> acesse este manual quando quiser.</Text>
+            <Text style={styles.item}>• <Text style={styles.bold}>Assistente Virtual:</Text> fale com o suporte ou peça ajuda diretamente pelo chat.</Text>
+          </View>
+        </View>
+
+        <View style={styles.sections}>
+          <Text style={styles.sectionTitle}>Fazer uma nova sugestão ou reclamação</Text>
+          <View style={styles.orderedList}>
+            <Text style={styles.item}>1. Toque em “Fazer uma nova sugestão/reclamação”.</Text>
+            <Text style={styles.item}>2. Preencha os campos:</Text>
+            <View style={styles.subList}>
+              <Text style={styles.subItem}>• <Text style={styles.bold}>Título:</Text> um resumo curto do problema.</Text>
+              <Text style={styles.subItem}>• <Text style={styles.bold}>Tema:</Text> escolha a categoria (ex.: iluminação, segurança, saneamento).</Text>
+              <Text style={styles.subItem}>• <Text style={styles.bold}>Nível:</Text> indique a gravidade (pouco urgente, urgente, emergência).</Text>
+              <Text style={styles.subItem}>• <Text style={styles.bold}>Endereço:</Text> onde está acontecendo a situação.</Text>
+              <Text style={styles.subItem}>• <Text style={styles.bold}>Nome:</Text> seu nome ou apelido.</Text>
+            </View>
+            <Text style={styles.item}>3. Escreva a descrição com o máximo de detalhes possível.</Text>
+            <Text style={styles.item}>4. (Opcional) Adicione fotos ou vídeos.</Text>
+            <Text style={styles.item}>5. Toque em “Publicar” para enviar.</Text>
+            <Text style={styles.item}>💡 <Text style={styles.italic}>Dica:</Text> quanto mais detalhes você der, mais fácil será resolver o problema.</Text>
+          </View>
+        </View>
+
+        <View style={styles.sections}>
+          <Text style={styles.sectionTitle}>Acompanhar suas publicações</Text>
+          <Text style={styles.paragraph}>
+            Na aba “Minhas Publicações”, você pode:
+          </Text>
+          <View style={styles.subList}>
             <Text style={styles.subItem}>• Ver tudo que já enviou</Text>
             <Text style={styles.subItem}>• Conferir a data, status e resposta da prefeitura</Text>
             <Text style={styles.subItem}>• Editar ou excluir publicações recentes.</Text>
           </View>
         </View>
 
-        {/*Seção 5 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Explorar Infraestrutura e Serviços Públicos</Text>
-        <Text style={styles.paragraph}>
-          Aqui você encontra informações sobre:
-        </Text>
-        <View style={styles.subList}>
+          <Text style={styles.sectionTitle}>Explorar Infraestrutura e Serviços Públicos</Text>
+          <Text style={styles.paragraph}>
+            Aqui você encontra informações sobre:
+          </Text>
+          <View style={styles.subList}>
             <Text style={styles.subItem}>• Água, esgoto e coleta de lixo.</Text>
             <Text style={styles.subItem}>• Iluminação pública.</Text>
             <Text style={styles.subItem}>• Segurança e policiamento.</Text>
@@ -89,13 +84,12 @@ export default function ManualDeUso() {
           </View>
         </View>
 
-        {/*Seção 6 */}
         <View>
-        <Text style={styles.sectionTitle}>Assistente Virtual</Text>
-        <Text style={styles.paragraph}>
-          Use o chat para:
-        </Text>
-        <View style={styles.subList}>
+          <Text style={styles.sectionTitle}>Assistente Virtual</Text>
+          <Text style={styles.paragraph}>
+            Use o chat para:
+          </Text>
+          <View style={styles.subList}>
             <Text style={styles.subItem}>• Tirar dúvidas rápidas.</Text>
             <Text style={styles.subItem}>• Solicitar contato com setores da prefeitura.</Text>
             <Text style={styles.subItem}>• Receber orientações sobre serviços públicos.</Text>
@@ -119,17 +113,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#0057a3",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     paddingHorizontal: 12,
-    paddingTop: 50,
-    paddingBottom: 12,
+    paddingTop: 40,
+    paddingBottom: 10,
     zIndex: 10,
-    elevation: 4,
+    elevation: 0,
   },
 
   backButton: {
-    marginLeft: 10,
-    marginTop: 8,
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    bottom: 0,
+    justifyContent: 'center',
   },
 
   backText: {
@@ -145,10 +142,8 @@ const styles = StyleSheet.create({
 
   logo: {
     width: 180,
-    height: 110,
-    marginLeft: 12,
-    transform: [{ translateX: 75 }],
-    marginBottom: -20,
+    height: 60,
+    resizeMode: 'contain',
   },
 
   headerTitle: {
@@ -158,7 +153,7 @@ const styles = StyleSheet.create({
   },
 
   scrollArea: {
-    marginTop: 155,
+    marginTop: 120,
     paddingTop: 10,
     borderRadius: 20,
     backgroundColor: "#fff",
@@ -216,8 +211,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
-  sections:{
-    borderBottomWidth: 1, 
+  sections: {
+    borderBottomWidth: 1,
     borderBottomColor: 'gray',
     borderStyle: 'solid',
     marginVertical: 5,

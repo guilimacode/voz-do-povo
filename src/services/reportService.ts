@@ -17,7 +17,7 @@ interface ReportAddressRequest {
 
 interface Report {
     report: string;
-    description: string
+    reportDescription: string
     reportCategory: string;
 }
 
@@ -48,5 +48,10 @@ export const publishReport = async (data: PublishReportData) => {
 
 export const getReportById = async (id: string): Promise<ReportDetail> => {
     const response = await api.get(`/voz-do-povo/${id}`);
+    return response.data;
+};
+
+export const getReportsByEmail = async (email: string): Promise<ReportDetail[]> => {
+    const response = await api.get(`/voz-do-povo/${email}/reports`);
     return response.data;
 };

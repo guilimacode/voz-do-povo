@@ -3,68 +3,60 @@ import React from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ManualDeUso() {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push("/menu")} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.replace("/menu")} style={styles.backButton}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
-        <Image source={require('assets/images/logo.png')} style={styles.logo}/>
+        <Image source={require('assets/images/logo_b.png')} style={styles.logo} />
       </View>
 
       <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.logoContainer}>
-            <Text style={styles.headerTitle}>Infraestrutura e Serviços Públicos</Text>
+          <Text style={styles.headerTitle}>Infraestrutura e Serviços Públicos</Text>
         </View>
 
-        {/*Tópico 1 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Saneamento básico</Text>
-        <Text style={styles.paragraph}>Problemas com água, esgoto, drenagem ou coleta de lixo.</Text>
+          <Text style={styles.sectionTitle}>Saneamento básico</Text>
+          <Text style={styles.paragraph}>Problemas com água, esgoto, drenagem ou coleta de lixo.</Text>
         </View>
 
-        {/*Tópico 2 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Infraestrutura viária</Text>
-        <Text style={styles.paragraph}>Buracos, asfalto danificado, calçadas quebradas ou sinalização ruim.</Text>
-        </View>
-        
-        {/*Tópico 3 */}
-        <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Educação</Text>
-        <Text style={styles.paragraph}>Escolas, creches, infraestrutura ou falta de vagas.</Text>
+          <Text style={styles.sectionTitle}>Infraestrutura viária</Text>
+          <Text style={styles.paragraph}>Buracos, asfalto danificado, calçadas quebradas ou sinalização ruim.</Text>
         </View>
 
-        {/*Tópico 4 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Iluminação pública</Text>
-        <Text style={styles.paragraph}>Poste apagado, lâmpada queimada ou iluminação insuficiente em ruas.</Text>
+          <Text style={styles.sectionTitle}>Educação</Text>
+          <Text style={styles.paragraph}>Escolas, creches, infraestrutura ou falta de vagas.</Text>
         </View>
 
-        {/*Tópico 5 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Energia elétrica</Text>
-        <Text style={styles.paragraph}>Queda de energia, fios soltos ou problemas na rede elétrica.</Text>
+          <Text style={styles.sectionTitle}>Iluminação pública</Text>
+          <Text style={styles.paragraph}>Poste apagado, lâmpada queimada ou iluminação insuficiente em ruas.</Text>
         </View>
 
-        {/*Tópico 6 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Segurança pública</Text>
-        <Text style={styles.paragraph}>Falta de policiamento, áreas perigosas ou necessidade de monitoramento.</Text>
+          <Text style={styles.sectionTitle}>Energia elétrica</Text>
+          <Text style={styles.paragraph}>Queda de energia, fios soltos ou problemas na rede elétrica.</Text>
         </View>
 
-        {/*Tópico 7 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Áreas verdes e lazer</Text>
-        <Text style={styles.paragraph}>Praças, parques, quadras, playground, areninhas ou espaços abandonados</Text>
+          <Text style={styles.sectionTitle}>Segurança pública</Text>
+          <Text style={styles.paragraph}>Falta de policiamento, áreas perigosas ou necessidade de monitoramento.</Text>
         </View>
 
-        {/*Tópico 8 */}
         <View style={styles.sections}>
-        <Text style={styles.sectionTitle}>Transporte público</Text>
-        <Text style={styles.paragraph}>Ônibus, metrôs, trens, pontos de parada e estações</Text>
+          <Text style={styles.sectionTitle}>Áreas verdes e lazer</Text>
+          <Text style={styles.paragraph}>Praças, parques, quadras, playground, areninhas ou espaços abandonados</Text>
+        </View>
+
+        <View style={styles.sections}>
+          <Text style={styles.sectionTitle}>Transporte público</Text>
+          <Text style={styles.paragraph}>Ônibus, metrôs, trens, pontos de parada e estações</Text>
         </View>
       </ScrollView>
     </View>
@@ -84,17 +76,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#0057a3",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     paddingHorizontal: 12,
     paddingTop: 40,
     paddingBottom: 12,
     zIndex: 10,
-    elevation: 4,
+    elevation: 0,
   },
 
   backButton: {
-    marginLeft: 10,
-    marginTop: 8,
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    bottom: 0,
+    justifyContent: 'center',
   },
 
   backText: {
@@ -108,17 +103,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginHorizontal: -10,
     paddingBottom: 10,
-    borderBottomWidth: 1, 
+    borderBottomWidth: 1,
     borderBottomColor: 'gray',
     borderStyle: 'solid',
   },
 
   logo: {
     width: 180,
-    height: 110,
-    marginLeft: 12,
-    transform: [{ translateX: 75 }],
-    marginBottom: -20,
+    height: 60,
+    resizeMode: 'contain',
   },
 
   headerTitle: {
@@ -128,7 +121,7 @@ const styles = StyleSheet.create({
   },
 
   scrollArea: {
-    marginTop: 142,
+    marginTop: 120,
     paddingTop: 10,
     borderRadius: 20,
     backgroundColor: "#fff",
@@ -186,8 +179,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
   },
-  sections:{
-    borderBottomWidth: 1, 
+  sections: {
+    borderBottomWidth: 1,
     borderBottomColor: 'gray',
     borderStyle: 'solid',
     marginVertical: 5,

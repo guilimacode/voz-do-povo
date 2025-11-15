@@ -1,17 +1,17 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getReportImageUrl } from '../../src/services/reportImageService';
 import { getReportById, ReportDetail } from "../../src/services/reportService";
 
 export default function PublicationDetailScreen() {
     const router = useRouter();
-    const { reportId } = useLocalSearchParams<{ reportId: string }>();
+    const { reportId, from } = useLocalSearchParams<{ reportId: string, from?: string }>();
     const [publication, setPublication] = useState<ReportDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (!reportId) {
+        if (!reportId || typeof reportId !== 'string') {
             console.error("Nenhum ID de publicação foi fornecido.");
             setIsLoading(false);
             return;
@@ -79,42 +79,44 @@ export default function PublicationDetailScreen() {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.header}>
-                <Image
-                    source={require('../../assets/images/logo_b.png')}
-                    style={styles.logo}
-                    resizeMode="contain"
-                />
-            </View>
-            <View style={styles.concludeButtonContainer}>
-                <Button title="Concluir" color='#297E33' onPress={() => router.replace('/menu')} />
+                {from === 'imageAdd' ? (
+                    <View style={styles.concludeButtonContainer}>
+                        <Button title="Concluir" color='#297E33' onPress={() => router.replace('/menu')} />
+                    </View>
+                ) : (
+                    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                        <Text style={styles.backText}>←</Text>
+                    </TouchableOpacity>
+                )}
+                <Image source={require('../../assets/images/logo_b.png')} style={styles.logo} />
             </View>
             <View style={styles.content}>
                 <ScrollView contentContainerStyle={styles.scrollContent}>
-                    <Text style={styles.publishedAt}>Publicado em: {formatDate(publicationDate)}</Text>
+                    <View style={styles.topContent}>
+                        <Text style={styles.publishedAt}>Publicado em: {formatDate(publicationDate)}</Text>
 
-                    <Text style={styles.publicationTitle}>{publication.report.report}</Text>
+                        <Text style={styles.publicationTitle}>{publication.report.report}</Text>
 
-                    <Text style={styles.detailText}><Text style={styles.bold}>Tema da reclamação:</Text> {formatTheme(publication.report.reportCategory)}</Text>
-                    <Text style={styles.detailText}><Text style={styles.bold}>Endereço:</Text> {formatAddress()}</Text>
-                    <Text style={styles.detailText}><Text style={styles.bold}>Nome:</Text> {publication.userRequest.name}</Text>
+                        <Text style={styles.detailText}><Text style={styles.bold}>Tema da reclamação:</Text> {formatTheme(publication.report.reportCategory)}</Text>
+                        <Text style={styles.detailText}><Text style={styles.bold}>Endereço:</Text> {formatAddress()}</Text>
+                        <Text style={styles.detailText}><Text style={styles.bold}>Nome:</Text> {publication.userRequest.name}</Text>
 
-                    <View style={styles.complaintBox}>
-                        <Text style={styles.complaintContentText}>
-                            {publication.report.description || "Nenhuma descrição fornecida."}
-                        </Text>
+                        <Text style={styles.detailText}>{publication.report.reportDescription || "Nenhuma descrição fornecida."}</Text>
                     </View>
 
-                    {publication.report.images && publication.report.images.length > 0 && (
-                        <>
-                            <View style={styles.divider} />
-                            <Text style={styles.mediaTitle}>Mídia anexada</Text>
-                            <View style={styles.mediaContainer}>
-                                {publication.report.images.map((image, index) => (
-                                    <Image key={image.id} source={{ uri: getReportImageUrl(publication.id, index) }} style={styles.mediaImage} />
-                                ))}
-                            </View>
-                        </>
-                    )}
+                    <View style={styles.bottomContent}>
+                        {publication.report.images && publication.report.images.length > 0 && (
+                            <>
+                                <View style={styles.divider} />
+                                <Text style={styles.mediaTitle}>Mídia anexada</Text>
+                                <View style={styles.mediaContainer}>
+                                    {publication.report.images.map((image, index) => (
+                                        <Image key={image.id} source={{ uri: getReportImageUrl(publication.id, index) }} style={styles.mediaImage} />
+                                    ))}
+                                </View>
+                            </>
+                        )}
+                    </View>
                 </ScrollView>
             </View>
         </View>
@@ -135,37 +137,60 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        marginTop: -20,
-        paddingHorizontal: 16,
-        paddingTop: 24,
+        marginTop: 110,
     },
     scrollContent: {
+        flexGrow: 1,
+        justifyContent: 'space-between',
+    },
+    topContent: {
+        paddingHorizontal: 16,
+    },
+    bottomContent: {
+        paddingHorizontal: 16,
+        paddingBottom: 24,
     },
     header: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
         backgroundColor: '#174791',
-        paddingTop: 60,
-        paddingBottom: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 12,
+        paddingTop: 40,
+        paddingBottom: 10,
+        zIndex: 10,
+        elevation: 0,
     },
     logo: {
-        width: 230,
-        height: 73,
+        width: 180,
+        height: 60,
+        resizeMode: 'contain',
     },
     concludeButtonContainer: {
         position: 'absolute',
-        top: 50,
+        top: 40,
         right: 16,
         backgroundColor: '#297E33',
         borderRadius: 5,
+        justifyContent: 'center',
+        height: 40,
     },
     publishedAt: {
+        fontSize: 12,
+        color: '#FFFFFF',
+        backgroundColor: '#297E33',
+        paddingVertical: 6,
+        paddingHorizontal: 15,
         textAlign: 'right',
-        color: '#555',
         marginBottom: 20,
+        marginHorizontal: -16,
     },
     publicationTitle: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#297E33',
         marginBottom: 15,
@@ -178,14 +203,7 @@ const styles = StyleSheet.create({
     bold: {
         fontWeight: 'bold',
     },
-    complaintBox: {
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        borderRadius: 8,
-        padding: 12,
-        marginTop: 15,
-        minHeight: 100,
-    },
+
     complaintText: {
         color: '#888',
         fontStyle: 'italic',
@@ -220,5 +238,17 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         marginBottom: 20,
-    }
+    },
+    backButton: {
+        position: 'absolute',
+        left: 20,
+        top: 40,
+        bottom: 0,
+        justifyContent: 'center',
+    },
+    backText: {
+        color: "#fff",
+        fontSize: 28,
+        fontWeight: "bold",
+    },
 });

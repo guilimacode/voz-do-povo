@@ -55,7 +55,6 @@ export default function App() {
     };
   }, []);
 
-  // Mensagens iniciais
   useEffect(() => {
     const mensagemInicial: Message = {
       id: Date.now().toString(),
@@ -113,7 +112,7 @@ export default function App() {
   return (
     <View style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push("/menu")} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.replace("/menu")} style={styles.backButton}>
           <Image
             source={require("../../assets/images/icone_voltar.png")}
             style={{ width: 30, height: 30 }}
@@ -128,7 +127,7 @@ export default function App() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.messagesList}
         keyboardShouldPersistTaps="handled"
-        style={{ flex: 1, backgroundColor:   '#fcf6e9ff'}}
+        style={{ flex: 1, backgroundColor: '#fcf6e9ff' }}
       />
 
       <Animated.View style={[styles.inputContainer, { marginBottom: Animated.add(keyboardOffset, inputMarginAboveKeyboard) }]}>

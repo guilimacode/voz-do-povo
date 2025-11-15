@@ -48,7 +48,7 @@ export default function MenuScreen() {
                     </View>
 
                     <View style={[styles.gridRow, { marginBottom: 0 }]}>
-                        <TouchableOpacity style={[styles.card, { marginRight: 8 }]}>
+                        <TouchableOpacity style={[styles.card, { marginRight: 8 }]} onPress={() => router.push('/screens/myPublications')}>
                             <Image
                                 source={require('../assets/images/pub.png')}
                                 style={styles.cardImage}
