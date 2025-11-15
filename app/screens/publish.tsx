@@ -1,9 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import AddressModal from 'app/screens/address';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Keyboard, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { publishReport, PublishReportData } from '../../src/services/reportService';
+import { EMAIL_USER_KEY } from '../../src/services/storage';
 
 export default function App() {
   const [title, setTitle] = useState('');
@@ -17,15 +19,24 @@ export default function App() {
   const router = useRouter();
   const [showAddressModal, setShowAddressModal] = useState(false);
 
-  const handlePublishAndNavigate = async () => {
-    if (!title || !theme || !email || !addressDetails || (!anonymous && !name)) {
-      Alert.alert("Campos obrigatórios", "Preencha todos os campos obrigatórios (*).");
-      return;
-    }
+  useEffect(() => {
+    const loadEmail = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem(EMAIL_USER_KEY);
+        if (savedEmail !== null) {
+          setEmail(savedEmail);
+        }
+      } catch (e) {
+        console.error("Falha ao recuperar email do storage", e);
+      }
+    };
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert("Email Inválido", "Por favor, insira um endereço de email válido.");
+    loadEmail();
+  }, []);
+
+  const handlePublishAndNavigate = async () => {
+    if (!title || !theme || !email || !complaint || !addressDetails || (!anonymous && !name)) {
+      Alert.alert("Campos obrigatórios", "Preencha todos os campos obrigatórios (*).");
       return;
     }
 
@@ -45,7 +56,7 @@ export default function App() {
       },
       report: {
         report: title,
-        description: complaint,
+        reportDescription: complaint,
         reportCategory: theme.toUpperCase(),
       }
     };
@@ -61,10 +72,14 @@ export default function App() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+    >
       <View style={styles.header}>
         <View style={styles.headerButtons}>
-          <Button title="Cancelar" color='#297E33' onPress={() => router.push("/menu")} />
+          <Button title="Cancelar" color='#297E33' onPress={() => router.replace("/menu")} />
           <View style={{ flex: 1 }} />
           <View style={styles.publishBtn}>
             <Button title="Avançar" color='#297E33' onPress={handlePublishAndNavigate} />
@@ -83,9 +98,11 @@ export default function App() {
           <TextInput
             style={styles.input}
             placeholder="Digite o título aqui..."
-            maxLength={30}
+            maxLength={60}
             value={title}
             onChangeText={setTitle}
+            returnKeyType="done"
+            onSubmitEditing={() => Keyboard.dismiss()}
           />
         </View>
 
@@ -133,18 +150,6 @@ export default function App() {
           }} />
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email<Text style={styles.asterisk}> *</Text></Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite seu email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
           <Text style={styles.label}>
             Nome
             {!anonymous && <Text style={styles.asterisk}> *</Text>}
@@ -156,6 +161,8 @@ export default function App() {
             value={name}
             onChangeText={setName}
             editable={!anonymous}
+            returnKeyType="done"
+            onSubmitEditing={() => Keyboard.dismiss()}
           />
           <View style={styles.switchContainer}>
             <Switch value={anonymous} onValueChange={(value) => setAnonymous(value)} />
@@ -172,6 +179,8 @@ export default function App() {
             maxLength={250}
             value={complaint}
             onChangeText={setComplaint}
+            returnKeyType="done"
+            onSubmitEditing={() => Keyboard.dismiss()}
           />
         </View>
       </View>

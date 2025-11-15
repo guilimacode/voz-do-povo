@@ -75,7 +75,7 @@ export default function App() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 30}
       >
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push("/menu")} style={{ paddingRight: 3, backgroundColor: "#FFFFFF", borderRadius: 50, marginRight: 60 }}
+          <TouchableOpacity onPress={() => router.replace("/menu")} style={{ paddingRight: 3, backgroundColor: "#FFFFFF", borderRadius: 50, marginRight: 60 }}
           >
             <Image
               source={require("../../assets/images/icone_voltar.png")}

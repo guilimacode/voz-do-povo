@@ -26,7 +26,7 @@ export default function App() {
           await uploadReportImage(reportId, imageUri);
         }
       }
-      router.replace({ pathname: "/screens/publicationDetail", params: { reportId } });
+      router.replace({ pathname: "/screens/publicationDetail", params: { reportId, from: 'imageAdd' } });
     } catch (error) {
       Alert.alert("Erro no Upload", "Ocorreu um erro ao enviar as imagens. Por favor, tente novamente.");
     } finally {
