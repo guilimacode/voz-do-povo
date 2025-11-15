@@ -98,6 +98,7 @@ export default function App() {
           <TextInput
             style={styles.input}
             placeholder="Digite o título aqui..."
+            placeholderTextColor="#AAAAAA"
             maxLength={60}
             value={title}
             onChangeText={setTitle}
@@ -157,6 +158,7 @@ export default function App() {
           <TextInput
             style={[styles.input, anonymous && styles.inputDisabled]}
             placeholder={anonymous ? "" : "Digite seu nome"}
+            placeholderTextColor="#AAAAAA"
             maxLength={30}
             value={name}
             onChangeText={setName}
@@ -175,6 +177,7 @@ export default function App() {
           <TextInput
             style={styles.textArea}
             placeholder="Descreva sua reclamação aqui..."
+            placeholderTextColor="#AAAAAA"
             multiline
             maxLength={250}
             value={complaint}
