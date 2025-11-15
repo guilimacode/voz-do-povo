@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 20,
     paddingVertical: 10,
     paddingHorizontal: 14,

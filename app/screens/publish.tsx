@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import AddressModal from 'app/screens/address';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Alert, Button, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { publishReport, PublishReportData } from '../../src/services/reportService';
 
 export default function App() {
@@ -16,6 +16,7 @@ export default function App() {
   const [addressDetails, setAddressDetails] = useState(null);
   const router = useRouter();
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showCancelMessage, setShowCancelMessage] = useState(false);
 
   const handlePublishAndNavigate = async () => {
     if (!title || !theme || !email || !addressDetails || (!anonymous && !name)) {
@@ -60,15 +61,22 @@ export default function App() {
     }
   };
 
+  const onCancelPress = () => {
+    setShowCancelMessage(true);
+  };
+
+  const closeCancelMessage = () => {
+    setShowCancelMessage(false);
+  };
+
   return (
+    <>
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
         <View style={styles.headerButtons}>
-          <Button title="Cancelar" color='#297E33' onPress={() => router.push("/menu")} />
+          <Button title="Cancelar" color='#297E33' onPress={onCancelPress} />
           <View style={{ flex: 1 }} />
-          <View style={styles.publishBtn}>
-            <Button title="Avançar" color='#297E33' onPress={handlePublishAndNavigate} />
-          </View>
+          
         </View>
       </View>
 
@@ -149,6 +157,7 @@ export default function App() {
             Nome
             {!anonymous && <Text style={styles.asterisk}> *</Text>}
           </Text>
+          <View style={styles.rowView}>
           <TextInput
             style={[styles.input, anonymous && styles.inputDisabled]}
             placeholder={anonymous ? "" : "Digite seu nome"}
@@ -160,6 +169,7 @@ export default function App() {
           <View style={styles.switchContainer}>
             <Switch value={anonymous} onValueChange={(value) => setAnonymous(value)} />
             <Text style={styles.switchLabel}>Permanecer anônimo</Text>
+          </View>
           </View>
         </View>
 
@@ -174,8 +184,27 @@ export default function App() {
             onChangeText={setComplaint}
           />
         </View>
+
+            <TouchableOpacity style={{backgroundColor: '#297E33', borderRadius: 10, padding: 10, justifyContent: "center", alignItems: "center"}} onPress={handlePublishAndNavigate} >
+              <Text style={{fontSize: 15, color: "#FFFFFF"}}>Próxima etapa</Text>
+            </TouchableOpacity>
       </View>
     </ScrollView>
+    {showCancelMessage && (
+        <View style={styles.cancelMessageContainer}>
+          <Text style={styles.cancelMessageText}>Ao cancelar você irá excluir o conteúdo da publicação. Deseja continuar?</Text>
+          <View style={{ flex: 1 }} />
+          <View style={{alignItems: "center"}}>
+          <TouchableOpacity onPress={() => {router.push("/menu")}} style={styles.cancelButton}>
+            <Text style={styles.cancelButtonText}>Excluir</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={closeCancelMessage} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Voltar</Text>
+          </TouchableOpacity>
+          </View>
+          </View>
+      )}
+    </>
   );
 }
 
@@ -190,6 +219,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   headerButtons: {
+    marginTop: 15,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 31,
@@ -232,6 +262,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     color: '#555555',
+    flex: 1
   },
   picker: {
     height: 50,
@@ -244,7 +275,7 @@ const styles = StyleSheet.create({
   switchLabel: {
     fontSize: 10,
     color: '#297E33',
-    marginTop: 4,
+    marginTop: -5,
   },
   textAreaGroup: {
     borderWidth: 1,
@@ -298,4 +329,54 @@ const styles = StyleSheet.create({
     color: '#999',
     opacity: 0.7,
   },
+  rowView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: -5,
+  },
+  cancelMessageContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#174791',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: 60,
+  },
+  cancelMessageText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  cancelButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 7,
+    paddingVertical: 15,
+    marginHorizontal:10,
+    marginVertical:15,
+    width: "100%",
+    alignItems: "center"
+  },
+  cancelButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  closeButton: {
+    marginHorizontal: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
 });
